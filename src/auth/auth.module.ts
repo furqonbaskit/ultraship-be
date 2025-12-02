@@ -1,0 +1,21 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+import { Module } from '@nestjs/common';
+import { AuthService } from './auth.service';
+import { AuthResolver } from './auth.resolver';
+import { UsersModule } from '../users/users.module';
+import { JwtModule } from '@nestjs/jwt';
+import { JwtStrategy } from './jwt.strategy';
+
+@Module({
+  imports: [
+    UsersModule,
+    JwtModule.register({
+      secret: process.env.JWT_SECRET || 'change_this_secret',
+      signOptions: { expiresIn: '7d' },
+    }),
+  ],
+  providers: [AuthResolver, AuthService, JwtStrategy],
+  exports: [AuthService],
+})
+export class AuthModule {}
